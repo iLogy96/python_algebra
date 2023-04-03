@@ -41,7 +41,7 @@ class Account:
             self.balance -= withdrawn_amount
 
 
-# Test
+# Initialization
 bank = BankingApp("KraDeZe")
 
 # Interaktivna konzola:
