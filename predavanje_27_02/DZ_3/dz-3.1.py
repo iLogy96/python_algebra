@@ -40,18 +40,25 @@ print(
 
 aktualnaGodina = 2023
 
-for keys, values in vozilaFirme.items():
-    ageCriteria = datetime.date.today().year - int(values[3]) > 10
-    priceCriteria = values[4] > 40000
 
-    if ageCriteria == True and priceCriteria == True:
-        values = values + ["DA", "DA"]
-    if ageCriteria == True and priceCriteria == False:
-        values = values + ["DA", "NE"]
-    if ageCriteria == False and priceCriteria == True:
-        values = values + ["NE", "DA"]
-    else:
-        values = values + ["NE", "NE"]
-    print(
-        "{:<8} {:<15} {:<15} {:<15} {:<25} {:<15} {:<10} {:<20}".format(keys, *values)
-    )
+def companyVehiclesTable(vehicles):
+    for keys, values in vehicles.items():
+        ageCriteria = datetime.date.today().year - int(values[3]) > 10
+        priceCriteria = values[4] > 40000
+
+        if ageCriteria == True and priceCriteria == True:
+            values = values + ["DA", "DA"]
+        if ageCriteria == True and priceCriteria == False:
+            values = values + ["DA", "NE"]
+        if ageCriteria == False and priceCriteria == True:
+            values = values + ["NE", "DA"]
+        else:
+            values = values + ["NE", "NE"]
+        print(
+            "{:<8} {:<15} {:<15} {:<15} {:<25} {:<15} {:<10} {:<20}".format(
+                keys, *values
+            )
+        )
+
+
+companyVehiclesTable(vozilaFirme)
