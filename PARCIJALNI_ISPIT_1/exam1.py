@@ -1,3 +1,7 @@
+import os
+from datetime import datetime
+
+
 class BankingApp:
     def __init__(self, name):
         self.name = name
@@ -23,10 +27,16 @@ class BankingApp:
 
 
 class Account:
-    def __init__(self, account_number, name, balance):
+    def __init__(
+        self, account_number, balance, company_name, name, surname, address, city
+    ):
         self.account_number = account_number
         self.name = name
+        self.surname = surname
         self.balance = balance
+        self.company_name = company_name
+        self.address = address
+        self.city = city
 
     def deposit(self, deposited_amount):
         if deposited_amount > 0:
@@ -43,6 +53,26 @@ class Account:
 
 # Initialization
 bank = BankingApp("KraDeZe")
+randomAcc1 = Account(
+    "12345678911",
+    2000,
+    "Tvrtkica",
+    "Tvrtko",
+    "Tvrtkić",
+    "Maksimirska 125",
+    "Zagreb",
+)
+randomAcc2 = Account(
+    "11395658912",
+    55000,
+    "Random123",
+    "Ivan",
+    "Horvat",
+    "Horvatovac 11b",
+    "Zagreb",
+)
+bank.add_account(randomAcc1)
+bank.add_account(randomAcc2)
 
 # Interaktivna konzola:
 while True:
@@ -54,55 +84,81 @@ while True:
     choice = input("Izaberite opciju: ")
 
     if choice == "1":
-        id = input("Unesite jedinstveni broj računa: ")
-        ime = input("Unesite ime vlasnika računa: ")
-        svota = float(input("Unesite svotu eura s kojom raspolažete: "))
-        account = Account(id, ime, svota)
-        bank.add_account(account)
-        print("Uspješno ste izradili račun\n")
+        id = input("Unesite jedinstveni broj računa (OIB): ")
+        if len(id) < 11 or len(id) > 11:
+            print("OIB je predug ili prekratak, mora imati TOČNO 11 znakova")
+        else:
+            company_name = input("Unesite ime tvrtke: ")
+            name = input("Unesite ime vlasnika računa: ")
+            surname = input("Unesite prezime vlasnika računa: ")
+            address = input("Unesite adresu tvrtke: ")
+            city = input("Unesite grad u kojoj se nalazi tvrtka: ")
+            balance = float(input("Unesite svotu eura s kojom raspolažete: "))
+            account = Account(id, balance, company_name, name, surname, address, city)
+            bank.add_account(account)
+            os.system("cls" if os.name == "nt" else "clear")
+            print(
+                f"Uspješno ste izradili račun...\nDobrodošli korisnik BA-{datetime.now().strftime('%Y-%m')}-{str(len(bank.accounts)).zfill(5)}"
+            )
 
     elif choice == "2":
         id = input("Unesite jedinstveni broj računa kako bi ga mogli pronaći: ")
         account = bank.get_account(id)
         if account is None:
+            os.system("cls" if os.name == "nt" else "clear")
             print("Račun ne postoji...Molim vas izradite ga prvo")
         else:
-            print(
-                "Račun pronađen...Odaberite opciju\n1.Uplata\n2.Isplata\n3.Provjera stanja računa"
-            )
-
-            pod_izbor = input("Unesite opciju: ")
-
-            if pod_izbor == "1":
-                amount = float(input("Unesite svotu za uplatu: "))
-                account.deposit(amount)
+            os.system("cls" if os.name == "nt" else "clear")
+            while True:
+                # os.system("cls" if os.name == "nt" else "clear")
                 print(
-                    f"Transakcija uspješna, trenutno stanje računa je {account.balance}\n"
+                    f"Račun pronađen...Dobrodošli BA-{datetime.now().strftime('%Y-%m')}-{str(len(bank.accounts)).zfill(5)}\nOdaberite opciju\n1.Uplata\n2.Isplata\n3.Provjera stanja računa\n4.Nazad na prethodni izbornik"
                 )
 
-            elif pod_izbor == "2":
-                amount = float(input("Unesite svotu za isplatu: "))
-                account.withdraw(amount)
-                print(
-                    f"Transakcija uspješna, trenutno stanje računa je {account.balance}\n"
-                )
-            elif pod_izbor == "3":
-                print(f"Stanje računa je {account.balance}\n")
-            else:
-                print("Krivi unos\n")
+                pod_izbor = input("Unesite opciju: ")
 
+                if pod_izbor == "1":
+                    amount = float(input("Unesite svotu za uplatu: "))
+                    account.deposit(amount)
+                    os.system("cls" if os.name == "nt" else "clear")
+                    print(
+                        f"Transakcija uspješna, trenutno stanje računa je {account.balance} EUR({account.balance*7.5}HRK)\n"
+                    )
+
+                elif pod_izbor == "2":
+                    amount = float(input("Unesite svotu za isplatu: "))
+                    account.withdraw(amount)
+                    os.system("cls" if os.name == "nt" else "clear")
+                    print(
+                        f"Transakcija uspješna, trenutno stanje računa je {account.balance} EUR({account.balance*7.5}HRK)\n"
+                    )
+                elif pod_izbor == "3":
+                    os.system("cls" if os.name == "nt" else "clear")
+                    print(
+                        f"Stanje računa je {account.balance} EUR({account.balance*7.5}HRK)\n"
+                    )
+                elif pod_izbor == "4":
+                    os.system("cls" if os.name == "nt" else "clear")
+                    break
+
+                else:
+                    print("Krivi unos\n")
     elif choice == "3":
         id = input("Unesite broj računa koji želite zatvoriti\n")
         account = bank.get_account(id)
         if account is None:
+            os.system("cls" if os.name == "nt" else "clear")
             print("Račun ne postoji...Molim vas izradite ga prvo\n")
         else:
             bank.remove_account(account)
+            os.system("cls" if os.name == "nt" else "clear")
             print("Uspješno ste izbrisali račun\n")
 
     elif choice == "4":
+        os.system("cls" if os.name == "nt" else "clear")
         print("Thank you for using", bank.name)
         break
 
     else:
+        os.system("cls" if os.name == "nt" else "clear")
         print("Opcija je kriva ili ne postoji")

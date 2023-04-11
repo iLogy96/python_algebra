@@ -33,23 +33,23 @@ print(
     )
 )
 
-# iteriraj dokle god range vraća broj 
-for i in range(0,10):
+# iteriraj dokle god range vraća broj
+for i in range(0, 10):
     print(i)
 
 counter = 0
 while counter < 10:
-    # pristupamo nekoj listi 
+    # pristupamo nekoj listi
     print("condition is true")
-    counter+=1
+    counter += 1
 
 
-length = len(vozilaFirme.items()) # 3
+length = len(vozilaFirme.items())  # 3
 
 # implicitan uvjet
 # iteriraj dokle god postoji itema u dict
 # for keys, values in vozilaFirme.items():
-    
+
 counter = 0
 while counter < length:
     # 3 < 3 -> False
@@ -65,6 +65,8 @@ while counter < length:
             key, tip, proizvodnja, rega, godinaRege, cijena
         )
     )
-    counter+=1
+    counter += 1
 
 print("Ispisano")
+
+
