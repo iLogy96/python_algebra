@@ -1,4 +1,5 @@
 import os
+import pickle
 from datetime import datetime
 
 
@@ -6,6 +7,17 @@ class BankingApp:
     def __init__(self, name):
         self.name = name
         self.accounts = []
+
+    def save_accounts(self):
+        with open("bank_accounts.pkl", "wb") as f:
+            pickle.dump(self.accounts, f)
+
+    def load_accounts(self):
+        try:
+            with open("bank_accounts.pkl", "rb") as f:
+                self.accounts = pickle.load(f)
+        except FileNotFoundError:
+            self.accounts = []
 
     def add_account(self, account):
         self.accounts.append(account)
@@ -28,7 +40,14 @@ class BankingApp:
 
 class Account:
     def __init__(
-        self, account_number, balance, company_name, name, surname, address, city
+        self,
+        account_number,
+        balance,
+        company_name,
+        name,
+        surname,
+        address,
+        city,
     ):
         self.account_number = account_number
         self.name = name
@@ -37,42 +56,35 @@ class Account:
         self.company_name = company_name
         self.address = address
         self.city = city
+        self.transaction_history = []
 
     def deposit(self, deposited_amount):
         if deposited_amount > 0:
             self.balance += deposited_amount
+            self.transaction_history.append(f"Uplaćeno: {amount} EUR")
         else:
             print("Pogrešan unos")
 
     def withdraw(self, withdrawn_amount):
-        if withdrawn_amount > self.balance:
-            ("Nemate toliko novaca")
-        else:
-            self.balance -= withdrawn_amount
+        self.balance -= withdrawn_amount
+        self.transaction_history.append(f"Isplaćeno {amount} EUR")
+
+    def get_transaction_history(self):
+        for transaction in self.transaction_history:
+            print(transaction)
 
 
 # Initialization
 bank = BankingApp("KraDeZe")
 randomAcc1 = Account(
-    "12345678911",
-    2000,
-    "Tvrtkica",
-    "Tvrtko",
-    "Tvrtkić",
-    "Maksimirska 125",
-    "Zagreb",
+    "12345678911", 2000, "Tvrtkica", "Tvrtko", "Tvrtkić", "Maksimirska 125", "Zagreb"
 )
 randomAcc2 = Account(
-    "11395658912",
-    55000,
-    "Random123",
-    "Ivan",
-    "Horvat",
-    "Horvatovac 11b",
-    "Zagreb",
+    "11395658912", 55000, "Random123", "Ivan", "Horvat", "Horvatovac 11b", "Zagreb"
 )
 bank.add_account(randomAcc1)
 bank.add_account(randomAcc2)
+bank.load_accounts()
 
 # Interaktivna konzola:
 while True:
@@ -112,7 +124,7 @@ while True:
             while True:
                 # os.system("cls" if os.name == "nt" else "clear")
                 print(
-                    f"Račun pronađen...Dobrodošli BA-{datetime.now().strftime('%Y-%m')}-{str(len(bank.accounts)).zfill(5)}\nOdaberite opciju\n1.Uplata\n2.Isplata\n3.Provjera stanja računa\n4.Nazad na prethodni izbornik"
+                    f"Račun pronađen...Dobrodošli BA-{datetime.now().strftime('%Y-%m')}-{str(len(bank.accounts)).zfill(5)}\nOdaberite opciju\n1.Uplata\n2.Isplata\n3.Provjera stanja računa\n4.Ispišite listu transakcija\n5.Nazad na prethodni izbornik"
                 )
 
                 pod_izbor = input("Unesite opciju: ")
@@ -139,6 +151,10 @@ while True:
                     )
                 elif pod_izbor == "4":
                     os.system("cls" if os.name == "nt" else "clear")
+                    print(f"Transakcije su sljedeće: {account.transaction_history}")
+
+                elif pod_izbor == "5":
+                    os.system("cls" if os.name == "nt" else "clear")
                     break
 
                 else:
@@ -162,3 +178,6 @@ while True:
     else:
         os.system("cls" if os.name == "nt" else "clear")
         print("Opcija je kriva ili ne postoji")
+
+    if bank.accounts:
+        bank.save_accounts()
