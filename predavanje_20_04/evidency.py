@@ -6,8 +6,7 @@ class Person:
     def __str__(self):
         return f"Name: {self.name}, Age: {self.age}"
 
-person = Person("Ratko",25)
-print(person)
+
 class Employee(Person):
     def __init__(self, name, age, employee_id):
         super().__init__(name, age)
