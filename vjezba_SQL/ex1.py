@@ -53,7 +53,6 @@ session = Session()
 # p1 = Person(12312, "Mike", "Smith", "m", 35)
 # p2 = Person(12322, "Bob", "Blue", "m", 24)
 # p3 = Person(13232, "Hannah", "Blue", "f", 66)
-
 # session.add(p1)
 # session.add(p2)
 # session.add(p3)
