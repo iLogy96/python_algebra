@@ -18,7 +18,7 @@ class SmartKeyApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Smart Key App")
-        self.root.geometry("800x800")
+        self.root.geometry("800x400")
 
         self.status_label = Label(self.root, text="Dobro došli!", pady=10)
         self.status_label.pack()
@@ -51,15 +51,15 @@ class SmartKeyApp:
         self.pin_buttons_frame.pack()
 
         self.pin_buttons = []
-        for i in range(1, 10):  
+        for i in range(1, 10):
             button = Button(
                 self.pin_buttons_frame,
                 text=str(i),
                 command=lambda i=i: self.add_pin_digit(i),
                 width=4,
-                height=2
+                height=2,
             )
-            button.grid(row=(i-1) // 3, column=(i-1) % 3)  
+            button.grid(row=(i - 1) // 3, column=(i - 1) % 3)
             self.pin_buttons.append(button)
 
         # Add "0" button separately
@@ -68,9 +68,11 @@ class SmartKeyApp:
             text="0",
             command=lambda: self.add_pin_digit(0),
             width=4,
-            height=2
+            height=2,
         )
-        button_zero.grid(row=3, column=1, columnspan=1)  # Grid positioning for "0" button
+        button_zero.grid(
+            row=3, column=1, columnspan=1
+        )  # Grid positioning for "0" button
         self.pin_buttons.append(button_zero)
 
     def add_pin_digit(self, digit):
@@ -98,10 +100,10 @@ class SmartKeyApp:
         self.status_label.config(text="Administracija sustava")
 
         self.users_frame = Frame(self.root)
-        self.users_frame.pack()
+        self.users_frame.pack(side="left", fill="y")
 
         self.users_listbox = Listbox(self.users_frame, selectmode="single")
-        self.users_listbox.pack(side="left")
+        self.users_listbox.pack(side="left", fill="y")
 
         self.users_scrollbar = Scrollbar(self.users_frame)
         self.users_scrollbar.pack(side="right", fill="y")
@@ -111,33 +113,38 @@ class SmartKeyApp:
 
         self.update_users_list()
 
-        self.name_label = Label(self.root, text="Ime:")
-        self.name_label.pack()
-        self.name_entry = Entry(self.root)
-        self.name_entry.pack()
+        form_frame = Frame(self.root)
+        form_frame.pack(side="right", padx=10, pady=10)
 
-        self.surname_label = Label(self.root, text="Prezime:")
-        self.surname_label.pack()
-        self.surname_entry = Entry(self.root)
-        self.surname_entry.pack()
+        self.name_label = Label(form_frame, text="Ime:")
+        self.name_label.grid(row=0, column=0, sticky="e")
+        self.name_entry = Entry(form_frame)
+        self.name_entry.grid(row=0, column=1)
+
+        self.surname_label = Label(form_frame, text="Prezime:")
+        self.surname_label.grid(row=1, column=0, sticky="e")
+        self.surname_entry = Entry(form_frame)
+        self.surname_entry.grid(row=1, column=1)
 
         self.active_var = BooleanVar()
         self.active_checkbox = Checkbutton(
-            self.root, text="Aktivan", variable=self.active_var
+            form_frame, text="Aktivan", variable=self.active_var
         )
-        self.active_checkbox.pack()
+        self.active_checkbox.grid(row=2, columnspan=2, sticky="w")
 
-        self.edit_button = Button(self.root, text="Uredi", command=self.edit_user)
-        self.edit_button.pack()
-        self.save_button = Button(self.root, text="Spremi", command=self.save_user)
-        self.save_button.pack()
-        self.delete_button = Button(self.root, text="Izbriši", command=self.delete_user)
-        self.delete_button.pack()
+        self.edit_button = Button(form_frame, text="Uredi", command=self.edit_user)
+        self.edit_button.grid(row=3, column=0, sticky="e")
+        self.save_button = Button(form_frame, text="Spremi", command=self.save_user)
+        self.save_button.grid(row=3, column=1, sticky="w")
+        self.delete_button = Button(
+            form_frame, text="Izbriši", command=self.delete_user
+        )
+        self.delete_button.grid(row=4, column=0, sticky="e")
 
         self.cancel_button = Button(
-            self.root, text="Odustani", command=self.clear_fields
+            form_frame, text="Odustani", command=self.clear_fields
         )
-        self.cancel_button.pack()
+        self.cancel_button.grid(row=4, column=1, sticky="w")
 
     def update_users_list(self):
         self.users_listbox.delete(0, END)  # Izbriši sve elemente iz listboxa
