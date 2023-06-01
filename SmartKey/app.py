@@ -51,14 +51,27 @@ class SmartKeyApp:
         self.pin_buttons_frame.pack()
 
         self.pin_buttons = []
-        for i in range(10):
+        for i in range(1, 10):  
             button = Button(
                 self.pin_buttons_frame,
                 text=str(i),
                 command=lambda i=i: self.add_pin_digit(i),
+                width=4,
+                height=2
             )
-            button.pack(side="left")
+            button.grid(row=(i-1) // 3, column=(i-1) % 3)  
             self.pin_buttons.append(button)
+
+        # Add "0" button separately
+        button_zero = Button(
+            self.pin_buttons_frame,
+            text="0",
+            command=lambda: self.add_pin_digit(0),
+            width=4,
+            height=2
+        )
+        button_zero.grid(row=3, column=1, columnspan=1)  # Grid positioning for "0" button
+        self.pin_buttons.append(button_zero)
 
     def add_pin_digit(self, digit):
         current_pin = self.pin_entry.get()
@@ -121,7 +134,9 @@ class SmartKeyApp:
         self.delete_button = Button(self.root, text="Izbriši", command=self.delete_user)
         self.delete_button.pack()
 
-        self.cancel_button = Button(self.root, text="Odustani", command=self.clear_fields)
+        self.cancel_button = Button(
+            self.root, text="Odustani", command=self.clear_fields
+        )
         self.cancel_button.pack()
 
     def update_users_list(self):
