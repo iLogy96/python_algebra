@@ -1,5 +1,4 @@
 from tkinter import (
-    Tk,
     Frame,
     Label,
     Button,
@@ -46,7 +45,8 @@ class SmartKeyApp:
         self.pin_entry.pack()
         self.confirm_button = Button(self.root, text="Potvrdi", command=self.check_pin)
         self.confirm_button.pack()
-
+        self.cancel_pin = Button(self.root, text="Reset", command=self.reset_pin)
+        self.cancel_pin.pack()
         self.pin_buttons_frame = Frame(self.root)
         self.pin_buttons_frame.pack()
 
@@ -74,6 +74,9 @@ class SmartKeyApp:
             row=3, column=1, columnspan=1
         )  # Grid positioning for "0" button
         self.pin_buttons.append(button_zero)
+
+    def reset_pin(self):
+        self.pin_entry.delete(0, END)
 
     def add_pin_digit(self, digit):
         current_pin = self.pin_entry.get()
