@@ -71,7 +71,7 @@ class SmartKeyApp:
         user = session.query(User).filter_by(pin=pin).first()
         if user:
             self.status_label.config(
-                text=f"Uspješno unesen PIN!\nDobro došli, {user.name}!"
+                text=f"Uspješno unesen PIN!\nDobro došli, {user.name} {user.surname}!"
             )
             if pin == "0000":
                 self.open_admin_panel()
@@ -103,6 +103,11 @@ class SmartKeyApp:
         self.name_entry = Entry(self.root)
         self.name_entry.pack()
 
+        self.surname_label = Label(self.root, text="Prezime:")
+        self.surname_label.pack()
+        self.surname_entry = Entry(self.root)
+        self.surname_entry.pack()
+
         self.active_var = BooleanVar()
         self.active_checkbox = Checkbutton(
             self.root, text="Aktivan", variable=self.active_var
@@ -120,19 +125,24 @@ class SmartKeyApp:
         self.users_listbox.delete(0, END)  # Izbriši sve elemente iz listboxa
         users = session.query(User).all()
         for user in users:
-            self.users_listbox.insert(END, user.name)
+            self.users_listbox.insert(END, f"{user.name} {user.surname}")
 
     def edit_user(self):
         selected_user = self.users_listbox.get(self.users_listbox.curselection())
-        user = session.query(User).filter_by(name=selected_user).first()
+        name, surname = selected_user.split(" ", 1)
+        user = session.query(User).filter_by(name=name, surname=surname).first()
         self.active_checkbox.select() if user.active else self.active_checkbox.deselect()
         self.name_entry.delete(0, END)
         self.name_entry.insert(END, user.name)
+        self.surname_entry.delete(0, END)
+        self.surname_entry.insert(END, user.surname)
 
     def save_user(self):
         selected_user = self.users_listbox.get(self.users_listbox.curselection())
-        user = session.query(User).filter_by(name=selected_user).first()
+        name, surname = selected_user.split(" ", 1)
+        user = session.query(User).filter_by(name=name, surname=surname).first()
         user.name = self.name_entry.get()
+        user.surname = self.surname_entry.get()
         user.active = True if self.active_var.get() else False
         session.commit()
         showinfo("Spremljeno", "Promjene su spremljene!")
@@ -140,7 +150,8 @@ class SmartKeyApp:
 
     def delete_user(self):
         selected_user = self.users_listbox.get(self.users_listbox.curselection())
-        user = session.query(User).filter_by(name=selected_user).first()
+        name, surname = selected_user.split(" ", 1)
+        user = session.query(User).filter_by(name=name, surname=surname).first()
         session.delete(user)
         session.commit()
         self.users_listbox.delete(self.users_listbox.curselection())

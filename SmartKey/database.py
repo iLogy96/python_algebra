@@ -12,13 +12,14 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
-    name = Column(String, unique=True)
+    name = Column(String)
+    surname = Column(String)
     pin = Column(String, unique=True)
     active = Column(Boolean)
 
     __table_args__ = (
-        Index("idx_users_name", name),
-        UniqueConstraint("name", name="uq_users_name"),
+        Index("idx_users_name", name, surname),
+        UniqueConstraint("name", "surname", name="uq_users_name_surname"),
         UniqueConstraint("pin", name="uq_users_pin")
     )
 
@@ -28,9 +29,9 @@ Base.metadata.create_all(engine)
 # Popunjavanje baze s korisnicima
 def populate_users():
     users = [
-        {"name": "John Doe", "pin": "1234", "active": True},
-        {"name": "Jane Smith", "pin": "5678", "active": True},
-        {"name": "Admin", "pin": "0000", "active": True}
+        {"name": "John", "surname": "Doe", "pin": "1234", "active": True},
+        {"name": "Jane", "surname": "Smith", "pin": "5678", "active": True},
+        {"name": "Admin", "surname": "", "pin": "0000", "active": True}
     ]
 
     for user_data in users:
