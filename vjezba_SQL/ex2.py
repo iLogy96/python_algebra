@@ -2,7 +2,7 @@ import tkinter as tk
 import sqlite3
 
 # Connect to the database
-conn = sqlite3.connect('PARCIJALNI_ISPIT_2/user_database.db')
+conn = sqlite3.connect('vjezba_SQL/user_database.db')
 c = conn.cursor()
 
 # Create a users table if it doesn't exist

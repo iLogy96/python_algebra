@@ -44,20 +44,20 @@ session = Session()
 
 # Data
 authors = [
-    ("John", "Doe"),
-    ("Jane", "Doe"),
-    ("Anna", "Blue"),
-    ("John", "Williams"),
-    ("Random", "Guy"),
-    ("Smth", "Smth"),
+    ("J.K.", "Rowling"),
+    ("George", " R.R. Martin"),
+    ("J.R.R.", "Tolkien"),
+    ("Jane", "Austen"),
+    ("Ernest", "Hemingway"),
+    ("Agatha", "Christie"),
 ]
 books = [
-    ("title 1", 1),
-    ("title 2", 2),
-    ("title 3", 3),
-    ("title 4", 4),
-    ("title 5", 5),
-    ("title 6", 6),
+    ("Harry Potter and the Philosopher's Stone", 1),
+    ("A Storm of Swords", 2),
+    ("The Hobbit", 3),
+    ("Pride and Prejudice", 4),
+    ("For Whom the Bell Tolls", 5),
+    ("Murder on the Orient Express", 6),
 ]
 
 # Add authors to the database
