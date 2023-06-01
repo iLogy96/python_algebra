@@ -18,7 +18,7 @@ class SmartKeyApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Smart Key App")
-        self.root.geometry("800x400")
+        self.root.geometry("800x800")
 
         self.status_label = Label(self.root, text="Dobro došli!", pady=10)
         self.status_label.pack()
@@ -121,6 +121,9 @@ class SmartKeyApp:
         self.delete_button = Button(self.root, text="Izbriši", command=self.delete_user)
         self.delete_button.pack()
 
+        self.cancel_button = Button(self.root, text="Odustani", command=self.clear_fields)
+        self.cancel_button.pack()
+
     def update_users_list(self):
         self.users_listbox.delete(0, END)  # Izbriši sve elemente iz listboxa
         users = session.query(User).all()
@@ -147,6 +150,7 @@ class SmartKeyApp:
         session.commit()
         showinfo("Spremljeno", "Promjene su spremljene!")
         self.update_users_list()  # Ažuriraj prikaz korisnika
+        self.clear_fields()  # Očisti polja nakon spremanja
 
     def delete_user(self):
         selected_user = self.users_listbox.get(self.users_listbox.curselection())
@@ -156,3 +160,9 @@ class SmartKeyApp:
         session.commit()
         self.users_listbox.delete(self.users_listbox.curselection())
         showinfo("Izbrisano", "Korisnik je izbrisan!")
+        self.clear_fields()  # Očisti polja nakon brisanja
+
+    def clear_fields(self):
+        self.name_entry.delete(0, END)
+        self.surname_entry.delete(0, END)
+        self.active_checkbox.deselect()
