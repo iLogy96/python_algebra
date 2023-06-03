@@ -62,7 +62,7 @@ class SmartKeyApp:
             button.grid(row=(i - 1) // 3, column=(i - 1) % 3)
             self.pin_buttons.append(button)
 
-        # Add "0" button separately
+        # Add "0" button separately because of the layout
         button_zero = Button(
             self.pin_buttons_frame,
             text="0",
@@ -72,7 +72,7 @@ class SmartKeyApp:
         )
         button_zero.grid(
             row=3, column=1, columnspan=1
-        )  # Grid positioning for "0" button
+        )  
         self.pin_buttons.append(button_zero)
 
     def reset_pin(self):
@@ -98,6 +98,7 @@ class SmartKeyApp:
 
     def open_admin_panel(self):
         self.pin_entry.destroy()
+        self.cancel_pin.destroy()
         self.confirm_button.destroy()
         self.pin_buttons_frame.destroy()
         self.status_label.config(text="Administracija sustava")
@@ -129,28 +130,38 @@ class SmartKeyApp:
         self.surname_entry = Entry(form_frame)
         self.surname_entry.grid(row=1, column=1)
 
+        self.id_label = Label(form_frame, text="ID:")
+        self.id_label.grid(row=2, column=0, sticky="e")
+        self.id_entry = Entry(form_frame)
+        self.id_entry.grid(row=2, column=1)
+
+        self.pin_label = Label(form_frame, text="PIN:")
+        self.pin_label.grid(row=3, column=0, sticky="e")
+        self.pin_entry = Entry(form_frame, show="*")
+        self.pin_entry.grid(row=3, column=1)
+
         self.active_var = BooleanVar()
         self.active_checkbox = Checkbutton(
             form_frame, text="Aktivan", variable=self.active_var
         )
-        self.active_checkbox.grid(row=2, columnspan=2, sticky="w")
+        self.active_checkbox.grid(row=4, columnspan=2, sticky="w")
 
         self.edit_button = Button(form_frame, text="Uredi", command=self.edit_user)
-        self.edit_button.grid(row=3, column=0, sticky="e")
+        self.edit_button.grid(row=5, column=0, sticky="e")
         self.save_button = Button(form_frame, text="Spremi", command=self.save_user)
-        self.save_button.grid(row=3, column=1, sticky="w")
+        self.save_button.grid(row=5, column=1, sticky="w")
         self.delete_button = Button(
             form_frame, text="Izbriši", command=self.delete_user
         )
-        self.delete_button.grid(row=4, column=0, sticky="e")
+        self.delete_button.grid(row=6, column=0, sticky="e")
 
         self.cancel_button = Button(
             form_frame, text="Odustani", command=self.clear_fields
         )
-        self.cancel_button.grid(row=4, column=1, sticky="w")
+        self.cancel_button.grid(row=6, column=1, sticky="w")
 
     def update_users_list(self):
-        self.users_listbox.delete(0, END)  # Izbriši sve elemente iz listboxa
+        self.users_listbox.delete(0, END)  
         users = session.query(User).all()
         for user in users:
             self.users_listbox.insert(END, f"{user.name} {user.surname}")
@@ -164,18 +175,43 @@ class SmartKeyApp:
         self.name_entry.insert(END, user.name)
         self.surname_entry.delete(0, END)
         self.surname_entry.insert(END, user.surname)
+        self.id_entry.delete(0, END)
+        self.id_entry.insert(END, user.id)
+        self.pin_entry.delete(0, END)
+        self.pin_entry.insert(END, user.pin)
 
     def save_user(self):
-        selected_user = self.users_listbox.get(self.users_listbox.curselection())
-        name, surname = selected_user.split(" ", 1)
-        user = session.query(User).filter_by(name=name, surname=surname).first()
-        user.name = self.name_entry.get()
-        user.surname = self.surname_entry.get()
-        user.active = True if self.active_var.get() else False
+        user_id = self.id_entry.get()
+        pin = self.pin_entry.get()
+
+        if not user_id or not pin:
+            showinfo("Greška", "ID i PIN moraju biti uneseni.")
+            return
+
+        name = self.name_entry.get()
+        surname = self.surname_entry.get()
+        active = True if self.active_var.get() else False
+
+        try:
+            user_id = int(user_id)
+        except ValueError:
+            showinfo("Greška", "ID mora biti cijeli broj.")
+            return
+
+        existing_user = session.query(User).filter_by(id=user_id).first()
+        if existing_user:
+            existing_user.name = name
+            existing_user.surname = surname
+            existing_user.pin = pin
+            existing_user.active = active
+        else:
+            user = User(id=user_id, pin=pin, name=name, surname=surname, active=active)
+            session.add(user)
+
         session.commit()
         showinfo("Spremljeno", "Promjene su spremljene!")
-        self.update_users_list()  # Ažuriraj prikaz korisnika
-        self.clear_fields()  # Očisti polja nakon spremanja
+        self.update_users_list()
+        self.clear_fields()
 
     def delete_user(self):
         selected_user = self.users_listbox.get(self.users_listbox.curselection())
@@ -185,9 +221,11 @@ class SmartKeyApp:
         session.commit()
         self.users_listbox.delete(self.users_listbox.curselection())
         showinfo("Izbrisano", "Korisnik je izbrisan!")
-        self.clear_fields()  # Očisti polja nakon brisanja
+        self.clear_fields()  
 
     def clear_fields(self):
         self.name_entry.delete(0, END)
         self.surname_entry.delete(0, END)
+        self.pin_entry.delete(0, END),
+        self.id_entry.delete(0, END)
         self.active_checkbox.deselect()
