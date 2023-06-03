@@ -70,9 +70,7 @@ class SmartKeyApp:
             width=4,
             height=2,
         )
-        button_zero.grid(
-            row=3, column=1, columnspan=1
-        )  
+        button_zero.grid(row=3, column=1, columnspan=1)
         self.pin_buttons.append(button_zero)
 
     def reset_pin(self):
@@ -106,7 +104,9 @@ class SmartKeyApp:
         self.users_frame = Frame(self.root)
         self.users_frame.pack(side="left", fill="y")
 
-        self.users_listbox = Listbox(self.users_frame, selectmode="single")
+        self.users_listbox = Listbox(
+            self.users_frame, selectmode="single", width="40", font=("Arial", 18)
+        )
         self.users_listbox.pack(side="left", fill="y")
 
         self.users_scrollbar = Scrollbar(self.users_frame)
@@ -161,7 +161,7 @@ class SmartKeyApp:
         self.cancel_button.grid(row=6, column=1, sticky="w")
 
     def update_users_list(self):
-        self.users_listbox.delete(0, END)  
+        self.users_listbox.delete(0, END)
         users = session.query(User).all()
         for user in users:
             self.users_listbox.insert(END, f"{user.name} {user.surname}")
@@ -221,7 +221,7 @@ class SmartKeyApp:
         session.commit()
         self.users_listbox.delete(self.users_listbox.curselection())
         showinfo("Izbrisano", "Korisnik je izbrisan!")
-        self.clear_fields()  
+        self.clear_fields()
 
     def clear_fields(self):
         self.name_entry.delete(0, END)
