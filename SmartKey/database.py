@@ -49,6 +49,5 @@ def populate_users():
 
     session.commit()
 
-
 # Poziv funkcije za popunjavanje korisnika
 populate_users()
