@@ -1,8 +1,20 @@
 {% extends 'base.html' %} {% block content %}
-<h1>Welcome to the Math Tutoring Page!</h1>
-<p>This page provides tutoring services for various mathematical topics.</p>
-<p>
-	Explore the links in the navigation bar to learn more about our students and
-	request tutoring.
-</p>
+<div class="jumbotron">
+	<div>
+		<h1 class="display-4">Online tutoring that releases potential</h1>
+		<p class="lead">
+			We can't stop you worrying about your child. But our expert tutors can
+			help their grades and confidence soar - and help you worry a little less.
+		</p>
+	</div>
+	<div>
+		<button class="btn btn-primary">
+			<a
+				href="/tutors"
+				style="text-decoration: none; color: black; font-size: large"
+				>See our tutors</a
+			>
+		</button>
+	</div>
+</div>
 {% endblock %}
